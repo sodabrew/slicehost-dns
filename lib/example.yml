@@ -1,0 +1,26 @@
+api: aldkgjhasklghaldghalghashglakdhgladshjg
+
+1.1.1.1:
+  example.com:
+    # these two A records are created by default, they are here as an example:
+    a:
+      example.com.: this
+      '*': this
+      # note that 'this' in this context is the current IP address
+    cname:
+      mail: web.mailhost.example.com.
+    mx: mailhost.example.com.
+    txt:
+    - "v=spf1 a mx ~all"
+    
+  example.tld:
+    cname:
+      blog: mattly.tumblr.com.
+    goog: all
+    # goog "mail" creates mx records for gmail and an spf record (unless one is given)
+    # goog "all" does the same as mail, as well as creates srv records for jabber/xmpp
+  
+  anotherexample.tld:
+    mx:
+      mailhost.example.com.: 5
+      backup.mailhost.example.com.: 10
