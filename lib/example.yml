@@ -17,8 +17,8 @@ api: aldkgjhasklghaldghalghashglakdhgladshjg
     cname:
       blog: mattly.tumblr.com.
     goog: all
-    # goog "mail" creates mx records for gmail and an spf record (unless one is given)
-    # goog "all" does the same as mail, as well as creates srv records for jabber/xmpp
+    # goog: "mail" creates mx records for gmail and an spf record (unless one is given)
+    # goog: "all" does the same as mail, as well as creates srv records for jabber/xmpp
   
   anotherexample.tld:
     mx:

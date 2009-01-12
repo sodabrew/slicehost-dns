@@ -1,0 +1,39 @@
+# slicehost-dns
+
+by Matthew Lyon <matt@flowerpowered.com>
+
+## DESCRIPTION:
+
+Helps you manage your DNS entries on the slicehost DNS server via a local YAML file.
+
+## FEATURES
+
+- Create new Zones just by adding them to the YAML file under an IP address
+- Automatically creates the root A record and a wildcard A record
+- creation of MX and SPF (TXT) records for gmail if desired
+- creation of SRV records for google chat if desired
+- can dump your current settings to a YAML file
+  
+## SYNOPSIS
+
+Get an example file:
+
+    slicehost-dns --example > example.yml
+
+Rename example.yml to config.yml, edit the "api" value to your api key, and dump your current settings
+from slicehost to config.yml:
+
+    slicehost-dns --dump config.yml
+
+Make some changes and push them back, but do a dry run first because we're not sure:
+
+    slicehost-dns config.yml --dry
+
+OK we're cool, push the changes for real this time:
+
+    slicehost-dns config.yml
+
+## REQUIREMENTS
+
+* activeresource
+* rspec, if you wish to run the spec suite

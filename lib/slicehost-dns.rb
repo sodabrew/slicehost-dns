@@ -18,7 +18,8 @@ end
 $LOG = Logger.new($stdout)
 
 def error(message) 
-  $LOG.fatal(message) || exit 
+  $LOG.fatal(message)
+  exit 
 end
 
 if ARGV.include? '--example'
@@ -39,9 +40,6 @@ $:.unshift File.dirname(__FILE__)
 require 'zone'
 require 'record'
 require 'reconciler'
-
-require 'ruby-debug'
-Debugger.start
 
 Zone.site = "https://#{API}@api.slicehost.com/"
 Record.site = "https://#{API}@api.slicehost.com/"
