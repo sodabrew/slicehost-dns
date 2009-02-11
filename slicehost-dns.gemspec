@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = "slicehost-dns"
-  s.version = "0.3"
-  s.date = "2009-01-11"
+  s.version = "0.3.1"
+  s.date = "2009-02-10"
   s.summary = "Manages DNS settings on your slicehost account via a YAML file"
   s.email = "matt@flowerpowered.com"
   s.homepage = "http://github.com/mattly/slicehost-dns"
