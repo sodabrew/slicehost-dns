@@ -33,8 +33,9 @@ dump = ARGV.delete('--dump')
 dry_run = ARGV.delete('--dry')
 filename = ARGV.shift
 config = YAML.load_file(filename)
-API = config.delete('api')
-$TTL = 43200 # 12 hours. 
+
+API = ENV['SLICEHOST_API_KEY'] || config.delete('api')
+raise ArgumentError, "no API key found" if API.nil?
 
 $:.unshift File.dirname(__FILE__)
 require 'zone'

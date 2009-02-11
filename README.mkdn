@@ -16,13 +16,9 @@ Helps you manage your DNS entries on the slicehost DNS server via a local YAML f
   
 ## SYNOPSIS
 
-Get an example file:
+Set your API key and dump your current config:
 
-    slicehost-dns --example > example.yml
-
-Rename example.yml to config.yml, edit the "api" value to your api key, and dump your current settings
-from slicehost to config.yml:
-
+    export SLICEHOST_API_KEY=234897293823984729390470fkbslkdfjbh
     slicehost-dns --dump config.yml
 
 Make some changes and push them back, but do a dry run first because we're not sure:
