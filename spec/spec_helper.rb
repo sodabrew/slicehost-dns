@@ -13,8 +13,6 @@ require 'ruby-debug'
 
 Debugger.start
 
-$TTL = 40000
-
 class Zone < ActiveResource::Base
   self.site = '/'
   def save

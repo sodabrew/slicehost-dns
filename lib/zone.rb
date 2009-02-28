@@ -6,7 +6,7 @@ class Zone < ActiveResource::Base
   
   def self.create_for_domain(domain)
     $LOG.info "> domain record doesn't exist yet, creating" if $LOG
-    zone = self.new(:origin => "#{domain}.", :ttl => $TTL)
+    zone = self.new(:origin => "#{domain}.")
     zone.save
     zone
   end

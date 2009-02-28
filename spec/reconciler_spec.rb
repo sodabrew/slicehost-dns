@@ -7,7 +7,7 @@ describe Reconciler do
   before do
     @ip = '1.1.1.1'
     @domain = 'example.com.'
-    @zone = Zone.new(:origin => @domain, :ttl => '5000', :id => '1')
+    @zone = Zone.new(:origin => @domain, :id => '1')
   end
   
   def reconciler
@@ -15,7 +15,7 @@ describe Reconciler do
   end
   
   def record(type, name, data, aux=0)
-    @zone.new_record(:record_type => type, :name => name, :data => data, :ttl => $TTL, :aux => aux)
+    @zone.new_record(:record_type => type, :name => name, :data => data :aux => aux)
   end
   
   describe "A records" do

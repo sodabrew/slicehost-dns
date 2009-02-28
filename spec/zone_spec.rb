@@ -12,10 +12,6 @@ describe Zone do
       @zone.origin.should == 'example.com.'
     end
     
-    it "sets the TTL" do
-      @zone.ttl.should == $TTL
-    end
-    
     it "saves the record" do
       @zone.id.should == '12345'
     end
@@ -33,9 +29,4 @@ describe Zone do
     end
   end
   
-  describe "updating the TTL" do
-    @zone = Zone.new(:ttl => nil)
-    @zone.update_ttl!
-    @zone.ttl.should == $TTL
-  end
 end
