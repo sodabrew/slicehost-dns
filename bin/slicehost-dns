@@ -1,2 +1,126 @@
 #! /usr/bin/env ruby
-load File.dirname(__FILE__) + '/../lib/slicehost-dns.rb'
+#
+require 'getoptlong'
+require 'rdoc/usage'
+require 'logger'
+
+$:.unshift File.dirname(__FILE__) + '/../lib/'
+require 'slicehost-dns'
+
+# Override the logger output to show just the messgae
+class Logger
+  class Formatter
+    def call(severity, time, progname, msg)
+      "#{msg}\n"
+    end
+  end
+end
+
+# Global logger and verbosity level
+# (process --verbose before Getopt)
+$LOG = Logger.new($stdout)
+if ARGV.delete('--verbose')
+  $LOG.level = Logger::DEBUG
+else
+  $LOG.level = Logger::INFO
+end
+
+
+# Parse the command line
+opts = GetoptLong.new(
+  [ '--help', GetoptLong::NO_ARGUMENT ],
+  [ '--dry', GetoptLong::NO_ARGUMENT ],
+  [ '--example', GetoptLong::NO_ARGUMENT ],
+  [ '--dump', GetoptLong::NO_ARGUMENT ],
+  [ '--delete', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--delete-extra', GetoptLong::NO_ARGUMENT ]
+)
+
+filename = nil
+dump = nil
+dry_run = nil
+delete = nil
+delete_extra = nil
+domain = nil
+
+opts.each do |opt, arg|
+  case opt
+    when '--help'
+      # TODO: Use Ruby Doc: RDoc::usage
+      $LOG.fatal("Usage: slicehost-dns (--dump --dry --verbose --help) [config.yml]")
+      exit
+    when '--dry'
+      dry_run = true
+    when '--dump'
+      dump = true
+    when '--delete'
+      delete = true
+      domain = arg
+    when '--delete-extra'
+      delete_extra = true
+    when '--example'
+      # TODO: Use Ruby Doc and embed the example
+      example = File.dirname(__FILE__) + '/../lib/example.yml'
+      puts open(example).read 
+      exit
+  end
+end
+
+filename = ARGV.shift
+config = {}
+
+# In Dump mode, if there's a filename and it exists, rewrite it. If there's a
+# filename and it doesn't exist, dump to it. If there's no filename, dump to
+# stdout.
+
+if filename and FileTest.exists?(filename)
+  config = YAML.load_file(filename)
+  $LOG.debug(YAML.dump(config))
+elsif dump and not filename
+  filename = "-"
+elsif not dump
+  raise ArgumentError, "no filename provided"
+end
+
+# Prefer the api key from the configuration file
+if config.has_key?('api')
+  API = config.delete('api')
+  $LOG.info("Using API key from YAML file: #{API}") if not API.nil?
+else
+  API = ENV['SLICEHOST_API_KEY']
+  $LOG.info("Using API key from environment: #{API}") if not API.nil?
+end
+raise ArgumentError, "no API key found" if API.nil?
+
+# Inject dummy classes
+if dry_run
+  class Zone
+    def save
+      $LOG.debug("~> dry saving zone #{origin}")
+    end
+    def destroy
+      $LOG.debug("~> dry destroying zone #{origin}")
+    end
+  end
+  class Record
+    def save
+      $LOG.debug("~> dry saving record #{kind} #{name}: #{data}")
+    end
+    def destroy
+      $LOG.debug("~> dry destroying record #{kind} #{name}: #{data}")
+    end
+  end
+end
+
+# TODO: One domain if provided on the command-line
+#domain = 'byteonawire.com'
+slicehost_dns = SlicehostDNS.new(API, domain)
+
+# Do it!
+if dump
+  slicehost_dns.dump(filename)
+elsif delete
+  slicehost_dns.delete(domain)
+else
+  slicehost_dns.process_config(config, delete_extra)
+end
