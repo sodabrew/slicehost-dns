@@ -1,5 +1,9 @@
 class Record < ActiveResource::Base
 
+  def self.find_by_domain(domain)
+    Record.find(:all, :params => { :origin => domain })
+  end
+  
   def kind
     record_type.downcase
   end
